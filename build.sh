@@ -1,6 +1,7 @@
 FILE="~/createPR"
 if [ -f "$FILE" ]; then
-    rm $FILE
+    rm -rf $FILE
 fi
 
-swift build && cp .build/arm64-apple-macosx/debug/PRfromJira ../createPR
+swift build && cp .build/arm64-apple-macosx/debug/PRfromJira /usr/local/bin/createPR
+make format

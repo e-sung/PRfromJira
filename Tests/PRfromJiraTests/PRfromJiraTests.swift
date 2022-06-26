@@ -1,5 +1,5 @@
-import XCTest
 @testable import PRfromJira
+import XCTest
 
 final class PRfromJiraTests: XCTestCase {
     func testExample() throws {
