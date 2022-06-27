@@ -7,13 +7,14 @@
 ```
 make install
 ```
-을 실행하면, 바이너리빌드를 생성하여, `/usr/local/bin/` 에 설치합니다. 
-제거하려면 `make uninstall`을 실행합니다.
+을 실행하면, 
+바이너리빌드를 생성하여, `/usr/local/bin/` 에 설치합니다.
+<br/>제거하려면 `make uninstall`을 실행합니다.
  
 
 ## Usage 
 
-최초 설정방법 보기: `createPR --help setup`
+최초 설정방법 보기: `createPR --help setup`<br/>
 사용방법 보기: `createPR --help usage` 
 
 ## Prerequisite
