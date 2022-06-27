@@ -7,22 +7,6 @@
 
 import Foundation
 
-func checkPreconditions() throws {
-    guard checkRCfileCreated() == true else {
-        throw JiraError(
-            errorDescription: "createPRrc 파일이 생성되지 않았습니다",
-            recoverySuggestion: "createPR --help setup 명령을 참조해주세요"
-        )
-    }
-
-    guard checkIfGithubCLIInstalled() == true else {
-        throw JiraError(
-            errorDescription: "Github CLI가 설치되지 않았습니다",
-            recoverySuggestion: "https://github.com/cli/cli#installation 를 참고해 Github CLI를 설치해주세요"
-        )
-    }
-}
-
 func createPRFromJiraIssue() async throws {
     try checkPreconditions()
 
@@ -79,6 +63,23 @@ func createPRBody(with issue: JiraIssue, references: ReferenceLinks?) throws -> 
     result = result.replace(target: "%ATTACHMENTS%", with: attachments)
 
     return result
+}
+
+
+func checkPreconditions() throws {
+    guard checkRCfileCreated() == true else {
+        throw JiraError(
+            errorDescription: "createPRrc 파일이 생성되지 않았습니다",
+            recoverySuggestion: "createPR --help setup 명령을 참조해주세요"
+        )
+    }
+
+    guard checkIfGithubCLIInstalled() == true else {
+        throw JiraError(
+            errorDescription: "Github CLI가 설치되지 않았습니다",
+            recoverySuggestion: "https://github.com/cli/cli#installation 를 참고해 Github CLI를 설치해주세요"
+        )
+    }
 }
 
 func checkIfGithubCLIInstalled() -> Bool {
