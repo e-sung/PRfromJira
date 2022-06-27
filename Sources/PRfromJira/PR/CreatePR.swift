@@ -7,7 +7,25 @@
 
 import Foundation
 
+func checkPreconditions() throws {
+    guard checkRCfileCreated() == true else {
+        throw JiraError(
+            errorDescription: "createPRrc 파일이 생성되지 않았습니다",
+            recoverySuggestion: "createPR --help setup 명령을 참조해주세요"
+        )
+    }
+
+    guard checkIfGithubCLIInstalled() == true else {
+        throw JiraError(
+            errorDescription: "Github CLI가 설치되지 않았습니다",
+            recoverySuggestion: "https://github.com/cli/cli#installation 를 참고해 Github CLI를 설치해주세요"
+        )
+    }
+}
+
 func createPRFromJiraIssue() async throws {
+    try checkPreconditions()
+
     let branch = shell("git branch --show-current")!
     guard let key = branch.components(separatedBy: "/").last?.replacingOccurrences(of: "\n", with: "") else {
         throw JiraError(
@@ -15,7 +33,6 @@ func createPRFromJiraIssue() async throws {
             recoverySuggestion: "브랜치 이름의 형식이 feature/{지라이슈키} 와 같은지 확인해주세요"
         )
     }
-
     print("현재 브랜치의 지라 이슈를 가져옵니다...")
     let issue = try await fetchJiraIssue(from: key)
     print("연관된 링크들을 가져옵니다....")
@@ -62,4 +79,28 @@ func createPRBody(with issue: JiraIssue, references: ReferenceLinks?) throws -> 
     result = result.replace(target: "%ATTACHMENTS%", with: attachments)
 
     return result
+}
+
+func checkIfGithubCLIInstalled() -> Bool {
+    let checkCommand = """
+    if ! type gh > /dev/null; then
+      echo "false"
+    else
+      echo "true"
+    fi
+    """
+    let result = shell(checkCommand)?.trimmingCharacters(in: .whitespacesAndNewlines)
+    return Bool(result ?? "false") ?? false
+}
+
+func checkRCfileCreated() -> Bool {
+    let checkCommand = """
+    if test -f \(rcFileLocation); then
+      echo "true"
+    else
+      echo "false"
+    fi
+    """
+    let result = shell(checkCommand)?.trimmingCharacters(in: .whitespacesAndNewlines)
+    return Bool(result ?? "false") ?? false
 }
