@@ -4,4 +4,3 @@ if [ -f "$FILE" ]; then
 fi
 
 swift build && cp .build/arm64-apple-macosx/debug/PRfromJira /usr/local/bin/createPR
-make format
