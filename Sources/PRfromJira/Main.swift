@@ -3,21 +3,20 @@ import Foundation
 @main
 public struct main {
     public static func main() async {
-        let result = checkRCfileCreated()
-//        do {
-//            let arguments = CommandLine.arguments
-//            if arguments.count == 1 {
-//                try await createPRFromJiraIssue()
-//            } else {
-//                printHelp(for: arguments)
-//            }
-//        } catch {
-//            print(error.localizedDescription)
-//            if let recoverySuggestion = (error as? LocalizedError)?.recoverySuggestion {
-//                print(recoverySuggestion)
-//            }
-//            print("기타 도움말을 얻고 싶으면 `createPR --help` 를 사용해주세요")
-//        }
+        do {
+            let arguments = CommandLine.arguments
+            if arguments.count == 1 {
+                try await createPRFromJiraIssue()
+            } else {
+                printHelp(for: arguments)
+            }
+        } catch {
+            print(error.localizedDescription)
+            if let recoverySuggestion = (error as? LocalizedError)?.recoverySuggestion {
+                print(recoverySuggestion)
+            }
+            print("기타 도움말을 얻고 싶으면 `createPR --help` 를 사용해주세요")
+        }
     }
 }
 
