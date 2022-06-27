@@ -61,7 +61,7 @@ func getTokenFromDisk() throws -> String {
 
 func getPRTemplateFromDisk() throws -> String {
     let rcFile = try getRcFileContentsFromDisk()
-    let prTemplatePattern = "PR_TEMPLATE: \n"
+    let prTemplatePattern = "\nPR_TEMPLATE:\n"
     let prTemplate = rcFile.components(separatedBy: prTemplatePattern).last
     if let prTemplate = prTemplate {
         return prTemplate

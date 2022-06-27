@@ -8,13 +8,14 @@
 import Foundation
 
 func createPRFromJiraIssue() async throws {
-    let branch = shell("git branch --show-current")!
-    guard let key = branch.components(separatedBy: "/").last?.replacingOccurrences(of: "\n", with: "") else {
-        throw JiraError(
-            errorDescription: "브랜치 이름에서 지라 이슈 키를 확인 할 수 없습니다",
-            recoverySuggestion: "브랜치 이름의 형식이 feature/{지라이슈키} 와 같은지 확인해주세요"
-        )
-    }
+//    let branch = shell("git branch --show-current")!
+//    guard let key = branch.components(separatedBy: "/").last?.replacingOccurrences(of: "\n", with: "") else {
+//        throw JiraError(
+//            errorDescription: "브랜치 이름에서 지라 이슈 키를 확인 할 수 없습니다",
+//            recoverySuggestion: "브랜치 이름의 형식이 feature/{지라이슈키} 와 같은지 확인해주세요"
+//        )
+//    }
+    let key = "ASSETS-2301"
 
     print("현재 브랜치의 지라 이슈를 가져옵니다...")
     let issue = try await fetchJiraIssue(from: key)
