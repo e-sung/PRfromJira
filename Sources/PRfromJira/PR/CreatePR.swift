@@ -27,8 +27,7 @@ func createPRFromJiraIssue() async throws {
     let script = """
     gh pr create --assignee @me --base develop --body "\(prBody)" --title "\(prTitle)" --web
     """
-    let result = shell(script)
-    print(result)
+    shell(script)
 }
 
 func createPRBody(with issue: JiraIssue, references: ReferenceLinks?) throws -> String {
