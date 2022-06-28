@@ -25,8 +25,8 @@ func fetchJiraIssue(from key: String) async throws -> JiraIssue {
     description = try description.removeAllJiraLink()
     description = try description.removeAttachments()
     description = try description.convertSlackLink()
-    let parent = fields["parent"] as! [String: Any]
-    let parentKey = parent["key"] as! String
+    let parent = fields["parent"] as? [String: Any]
+    let parentKey = parent?["key"] as? String
 
     let issueType = fields["issuetype"] as! [String: Any]
     let isSubTask = issueType["subtask"] as! Bool
@@ -45,18 +45,23 @@ func fetchJiraIssue(from key: String) async throws -> JiraIssue {
     )
 }
 
-func fetchReferenceLinks(from issue: JiraIssue) async throws -> ReferenceLinks {
+func fetchReferenceLinks(from issue: JiraIssue) async throws -> ReferenceLinks? {
     if issue.isEpic == false, issue.isSubTask == false {
-        return try await fetchReferenceLinks(from: issue.parentKey!)
+        return try await fetchReferenceLinks(from: issue.parentKey)
     } else if issue.isEpic {
         return try await fetchReferenceLinks(from: issue.key)
+    } else if let parentKey = issue.parentKey {
+        let parentIssue = try await fetchJiraIssue(from: parentKey)
+        return try await fetchReferenceLinks(from: parentIssue.parentKey)
     } else {
-        let parentIssue = try await fetchJiraIssue(from: issue.parentKey!)
-        return try await fetchReferenceLinks(from: parentIssue.parentKey!)
+        return nil
     }
 }
 
-func fetchReferenceLinks(from epicKey: String) async throws -> ReferenceLinks {
+func fetchReferenceLinks(from epicKey: String?) async throws -> ReferenceLinks? {
+    guard let epicKey = epicKey else {
+        return nil
+    }
     let request = try createRequest(with: epicKey)
     let response = try await URLSession.shared.data(for: request).0
     let data = try JSONSerialization.jsonObject(with: response) as! [String: Any]

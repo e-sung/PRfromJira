@@ -39,6 +39,7 @@ func createPRBody(with issue: JiraIssue, references: ReferenceLinks?) throws -> 
     if let techSpec = references?.techSpec {
         links += "* [테크스펙](\(techSpec))\n"
     }
+    links += "* \(issue.key)"
     if let designSpec = references?.designSpec {
         links += "* [Figma](\(designSpec))\n"
     }
