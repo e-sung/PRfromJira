@@ -8,6 +8,7 @@
 import Foundation
 
 func fetchJiraIssue(from key: String) async throws -> JiraIssue {
+    let key = try sanitized(key: key)
     let request = try createRequest(with: key)
     let response = try await URLSession.shared.data(for: request)
     let statusCode = (response.1 as! HTTPURLResponse).statusCode
@@ -43,6 +44,20 @@ func fetchJiraIssue(from key: String) async throws -> JiraIssue {
         isSubTask: isSubTask,
         attachments: attachments ?? []
     )
+}
+
+func sanitized(key: String) throws -> String {
+    let pattern = "\\w*-\\d*"
+    let range = NSRange(key.startIndex..., in: key)
+    let regex = try NSRegularExpression(pattern: pattern, options: [])
+    guard let match = regex.firstMatch(in: key, range: range) else {
+        throw JiraError(
+            errorDescription: "이슈키가 형식에 맞지 않습니다",
+            recoverySuggestion: "브랜치명이 지라 이슈키의 형식에 맞는지 확인해주세요"
+        )
+    }
+    let matchedText = NSString(string: key).substring(with: match.range)
+    return matchedText
 }
 
 func fetchReferenceLinks(from issue: JiraIssue) async throws -> ReferenceLinks? {

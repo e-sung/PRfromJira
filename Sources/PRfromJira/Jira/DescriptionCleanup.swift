@@ -16,7 +16,7 @@ extension String {
         let smartLinkRegex = try NSRegularExpression(pattern: pattern, options: [])
         let range = NSRange(startIndex..., in: self)
         let matches = smartLinkRegex.matches(in: self, range: range)
-        let urls = matches.map { match in
+        let urls = matches.map { match -> String in
             let matchedText = NSString(string: self).substring(with: match.range)
             let urlRegex = try! NSRegularExpression(pattern: urlPattern)
             let urlRange = urlRegex.rangeOfFirstMatch(in: matchedText, range: NSRange(startIndex..., in: matchedText))
@@ -38,7 +38,7 @@ extension String {
         let smartLinkRegex = try NSRegularExpression(pattern: pattern, options: [])
         let range = NSRange(startIndex..., in: self)
         let matches = smartLinkRegex.matches(in: self, range: range)
-        let urls = matches.map { match in
+        let urls = matches.map { match -> String in
             let matchedText = NSString(string: self).substring(with: match.range)
             let urlRegex = try! NSRegularExpression(pattern: urlPattern)
             let urlRange = urlRegex.rangeOfFirstMatch(in: matchedText, range: NSRange(startIndex..., in: matchedText))
@@ -67,7 +67,7 @@ extension String {
         let range = NSRange(startIndex..., in: self)
         let regex = try NSRegularExpression(pattern: pattern, options: [])
         let matches = regex.matches(in: self, range: range)
-        let urls = matches.map { match in
+        let urls = matches.map { match -> String in
             let matchedText = NSString(string: self).substring(with: match.range)
             let urlRegex = try! NSRegularExpression(pattern: urlPattern)
             let urlRange = urlRegex.rangeOfFirstMatch(in: matchedText, range: NSRange(startIndex..., in: matchedText))

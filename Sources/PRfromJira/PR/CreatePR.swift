@@ -8,9 +8,10 @@
 import Foundation
 
 func createPRFromJiraIssue() async throws {
-    try checkPreconditions()
+//    try checkPreconditions()
 
-    let branch = shell("git branch --show-current")!
+//    let branch = shell("git branch --show-current")!.trimmingCharacters(in: .whitespacesAndNewlines)
+    let branch = "IOS2-1437-1"
     guard let key = branch.components(separatedBy: "/").last?.replacingOccurrences(of: "\n", with: "") else {
         throw JiraError(
             errorDescription: "브랜치 이름에서 지라 이슈 키를 확인 할 수 없습니다",
@@ -24,6 +25,13 @@ func createPRFromJiraIssue() async throws {
     let prBody = try createPRBody(with: issue, references: links)
     let prTitle = "[\(key)] \(issue.summary)"
     print("\(prTitle)을 기반으로 PR 생성중입니다...")
+
+    if checkPushed() == false {
+        let branch = shell("git branch --show-current")!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let remote = shell("git remote show")?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "origin"
+        let pushCommand = "git push --set-upstream \(remote) \(branch)"
+        shell(pushCommand)
+    }
     let script = """
     gh pr create --assignee @me --base develop --body "\(prBody)" --title "\(prTitle)" --web
     """
@@ -103,4 +111,13 @@ func checkRCfileCreated() -> Bool {
     """
     let result = shell(checkCommand)?.trimmingCharacters(in: .whitespacesAndNewlines)
     return Bool(result ?? "false") ?? false
+}
+
+func checkPushed() -> Bool {
+    let checkCommand = """
+    git branch -vv | grep "origin/$(git branch --show-current)" -c
+    """
+    let result = shell(checkCommand)?.trimmingCharacters(in: .whitespacesAndNewlines)
+    let pushedBranchCount = Int(result ?? "0") ?? 0
+    return pushedBranchCount > 0
 }
