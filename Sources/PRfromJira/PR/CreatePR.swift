@@ -8,10 +8,9 @@
 import Foundation
 
 func createPRFromJiraIssue() async throws {
-//    try checkPreconditions()
+    try checkPreconditions()
 
-//    let branch = shell("git branch --show-current")!.trimmingCharacters(in: .whitespacesAndNewlines)
-    let branch = "IOS2-1437-1"
+    let branch = shell("git branch --show-current")!.trimmingCharacters(in: .whitespacesAndNewlines)
     guard let key = branch.components(separatedBy: "/").last?.replacingOccurrences(of: "\n", with: "") else {
         throw JiraError(
             errorDescription: "브랜치 이름에서 지라 이슈 키를 확인 할 수 없습니다",
