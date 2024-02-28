@@ -32,7 +32,7 @@ func createPRFromJiraIssue() async throws {
         shell(pushCommand)
     }
     let script = """
-    gh pr create --assignee @me --base develop --body "\(prBody)" --title "\(prTitle)" --web
+    gh pr create --assignee @me --base main --body "\(prBody)" --title "\(prTitle)" --web
     """
     shell(script)
 }
