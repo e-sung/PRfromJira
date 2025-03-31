@@ -1,6 +1,6 @@
 FILE="/usr/local/bin/createPR"
 if [ -f "$FILE" ]; then
-    rm -rf $FILE
+    sudo rm -rf $FILE
 fi
 
-swift build && cp .build/debug/PRfromJira $FILE
+swift build && sudo cp .build/debug/PRfromJira $FILE
